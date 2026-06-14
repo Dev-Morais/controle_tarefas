@@ -1,17 +1,25 @@
-# controle_tarefas_api
+# Controle de Tarefas
 
-A new Flutter project.
+Aplicativo de gerenciamento de tarefas pessoais desenvolvido com Flutter. O projeto permite que o usuário gerencie suas atividades diárias através de operações de CRUD, contando com autenticação de usuários e visualização estatística de desempenho.
 
-## Getting Started
+## 🚀 Tecnologias Utilizadas
+- **Linguagem:** Dart
+- **Framework:** Flutter
+- **Banco de Dados/API:** JSON Server (utilizando `db.json` para simular uma API RESTful)
+- **Gráficos:** `fl_chart`
+- **Gerenciamento de Estado:** State Management do Flutter (`setState`)
 
-This project is a starting point for a Flutter application.
+## 📋 Pré-requisitos
+Antes de começar, certifique-se de ter instalado em sua máquina:
+- [Flutter SDK](https://docs.flutter.dev/get-started/install)
+- [Node.js](https://nodejs.org/) (necessário para o JSON Server)
 
-A few resources to get you started if this is your first Flutter project:
+## ⚙️ Como executar o projeto
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+Siga os passos abaixo para rodar o projeto localmente:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 1. Clonar o repositório
+```bash
+git clone [https://github.com/SEU_USUARIO/NOME_DO_REPOSITORIO.git](https://github.com/SEU_USUARIO/NOME_DO_REPOSITORIO.git)
+cd NOME_DO_REPOSITORIO
+
