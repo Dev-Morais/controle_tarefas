@@ -1,0 +1,111 @@
+{
+  "usuarios": [
+    {
+      "nome": "gabriel morais",
+      "email": "gabriel.morais3344@gmail.com",
+      "senha": "123456",
+      "id": "KVXmWHwT8QU"
+    },
+    {
+      "nome": "gabriel morais",
+      "email": "gabriel.morais3344@gmail.com",
+      "senha": "123456",
+      "id": "fPE3rtr5hss"
+    },
+    {
+      "nome": "gabriel m",
+      "email": "gabriel.12@gamil.com",
+      "senha": "123456",
+      "id": "Vlg8s335lYc"
+    },
+    {
+      "nome": "gabriel m",
+      "email": "gabrie.12@gmail.com",
+      "senha": "123456",
+      "id": "i2fjskmvi_k"
+    },
+    {
+      "nome": "gbarie",
+      "email": "gabrie.m@gmail.com",
+      "senha": "123456",
+      "id": "d4arIpv64oA"
+    },
+    {
+      "nome": "gabrie",
+      "email": "gabrielm12@gmail.com",
+      "senha": "123456",
+      "id": "D6sMaqqsxlA"
+    },
+    {
+      "nome": "gabriel",
+      "email": "gbariel.morais3344@gmail.com",
+      "senha": "123456",
+      "id": "SNdnmduozRA"
+    },
+    {
+      "nome": "gabriel",
+      "email": "gabrielm12@gamil.com",
+      "senha": "123456",
+      "id": "uE8CW8BlR8E"
+    },
+    {
+      "nome": "gabriel m",
+      "email": "adimin@admin",
+      "senha": "123456",
+      "id": "rDK1Sn5ujNM"
+    },
+    {
+      "nome": "admin",
+      "email": "admin@admin",
+      "senha": "123456",
+      "id": "566YbBnjL0g"
+    }
+  ],
+  "tarefas": [
+    {
+      "titulo": "estuda T.I",
+      "concluida": false,
+      "dataVencimento": "2026-06-14T00:00:00.000",
+      "id": "IhEp-b5ka2Y"
+    },
+    {
+      "titulo": "tt",
+      "concluida": false,
+      "id": "xHKxwd9oNl4"
+    },
+    {
+      "titulo": "testt",
+      "concluida": false,
+      "id": "4sHLbbNSBRw"
+    },
+    {
+      "titulo": "testeee",
+      "concluida": false,
+      "dataVencimento": null,
+      "usuarioId": "D6sMaqqsxlA",
+      "id": "Ofn8cKWmvKI"
+    },
+    {
+      "titulo": "estudar",
+      "concluida": false,
+      "dataVencimento": null,
+      "usuarioId": "D6sMaqqsxlA",
+      "id": "VIQZvRD1hCE"
+    },
+    {
+      "titulo": "estudar",
+      "concluida": false,
+      "dataVencimento": null,
+      "usuarioId": "rDK1Sn5ujNM",
+      "id": "1daHAVi7Jh8"
+    },
+    {
+      "titulo": "fazer um trabalho",
+      "concluida": true,
+      "dataVencimento": null,
+      "usuarioId": "rDK1Sn5ujNM",
+      "id": "KN1Qd0LSCyk"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
