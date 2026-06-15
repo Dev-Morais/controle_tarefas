@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String baseUrl = "http://localhost:3000";
+  // A URL deve ser apenas uma string limpa:
+  final String baseUrl = "http://10.0.2.2:3000";
 
-  // ALTERAÇÃO: Adicionamos o parâmetro opcional usuarioId
-  // Se você passar um id, ele filtra. Se não passar, busca tudo (opcional)
+  // ... restante do seu código permanece exatamente igual
   Future<List> getDados(String endpoint, {String? usuarioId}) async {
     String url = '$baseUrl/$endpoint';
     if (usuarioId != null) {
@@ -21,8 +21,6 @@ class ApiService {
     }
   }
 
-  // O postDados continua igual, mas você deve garantir que, ao chamar,
-  // você inclua o "usuarioId" no Map 'dados' que você envia.
   Future<void> postDados(String endpoint, Map<String, dynamic> dados) async {
     await http.post(
       Uri.parse('$baseUrl/$endpoint'),

@@ -89,6 +89,12 @@
       "email": "4555455@gmail.com",
       "senha": "123456",
       "id": "39yocHWSd5M"
+    },
+    {
+      "nome": "gabriel m",
+      "email": "gabriel.m11@gmail.com",
+      "senha": "1234567",
+      "id": "2EExSrRMfwM"
     }
   ],
   "tarefas": [
@@ -107,20 +113,6 @@
       "titulo": "testt",
       "concluida": false,
       "id": "4sHLbbNSBRw"
-    },
-    {
-      "titulo": "testeee",
-      "concluida": false,
-      "dataVencimento": null,
-      "usuarioId": "D6sMaqqsxlA",
-      "id": "Ofn8cKWmvKI"
-    },
-    {
-      "titulo": "estudar",
-      "concluida": false,
-      "dataVencimento": null,
-      "usuarioId": "D6sMaqqsxlA",
-      "id": "VIQZvRD1hCE"
     },
     {
       "titulo": "estudar",
@@ -165,13 +157,6 @@
       "id": "MrVjre-yQGQ"
     },
     {
-      "titulo": "teste 3",
-      "concluida": false,
-      "dataVencimento": "2026-06-14T00:00:00.000",
-      "usuarioId": "GTDAeH6LfIc",
-      "id": "n19dVQBEO-o"
-    },
-    {
       "titulo": "teste22",
       "concluida": false,
       "dataVencimento": "2026-06-15T00:00:00.000",
@@ -184,6 +169,27 @@
       "dataVencimento": "2026-06-15T00:00:00.000",
       "usuarioId": "BvAeaWzEvXQ",
       "id": "uc_IPVdCZn0"
+    },
+    {
+      "titulo": "testee",
+      "concluida": false,
+      "dataVencimento": null,
+      "usuarioId": "D6sMaqqsxlA",
+      "id": "FQDAf3EuzmI"
+    },
+    {
+      "titulo": "teste",
+      "concluida": false,
+      "dataVencimento": null,
+      "usuarioId": "2EExSrRMfwM",
+      "id": "LUVPmQJLpCM"
+    },
+    {
+      "titulo": "testtt",
+      "concluida": false,
+      "dataVencimento": "2026-06-15T00:00:00.000",
+      "usuarioId": "D6sMaqqsxlA",
+      "id": "-1-yfYODpe0"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

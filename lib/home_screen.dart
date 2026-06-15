@@ -121,6 +121,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: const Text("Salvar"),
                     ),
                   ),
+                  const SizedBox(height: 10),
+                  // BOTÃO CANCELAR COM BORDA AZUL
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.blue,
+                        side: const BorderSide(color: Colors.blue, width: 1.5),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Cancelar"),
+                    ),
+                  ),
                 ],
               ),
             ),

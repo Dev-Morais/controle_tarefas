@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Controle de Tarefas',
       
-      // Tema fixo (apenas claro)
+      // Tema definido conforme o Material 3
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.grey[100],
       ),
       
+      // Inicia diretamente na tela de Login
       home: const LoginScreen(),
     );
   }
@@ -32,8 +33,9 @@ class MyApp extends StatelessWidget {
 // Classe de Utilitários para Alertas Padronizados
 class AppAlertas {
   static void mostrar(BuildContext context, String mensagem, {bool isErro = true}) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(
       SnackBar(
         content: Text(
           mensagem,
