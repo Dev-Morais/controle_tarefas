@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
+import 'splash_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -13,8 +15,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Controle de Tarefas',
-      
-      // Tema definido conforme o Material 3
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
@@ -23,9 +23,7 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.grey[100],
       ),
-      
-      // Inicia diretamente na tela de Login
-      home: const LoginScreen(),
+      home: const SplashScreen(), 
     );
   }
 }

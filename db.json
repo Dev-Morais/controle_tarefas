@@ -95,6 +95,30 @@
       "email": "gabriel.m11@gmail.com",
       "senha": "1234567",
       "id": "2EExSrRMfwM"
+    },
+    {
+      "nome": "maria",
+      "email": "maria223@gmail.com",
+      "senha": "123456",
+      "id": "1EWdfWFDADY"
+    },
+    {
+      "nome": "teste",
+      "email": "teste.22@gmail.com",
+      "senha": "123456",
+      "id": "Mv0fuVvXze0"
+    },
+    {
+      "nome": "teste",
+      "email": "teste23@gmail.com",
+      "senha": "123456",
+      "id": "_AeNV7gMkgQ"
+    },
+    {
+      "nome": "maria",
+      "email": "maria34@gmail.com",
+      "senha": "123456",
+      "id": "K6lkUAfEhHs"
     }
   ],
   "tarefas": [
@@ -172,7 +196,7 @@
     },
     {
       "titulo": "testee",
-      "concluida": false,
+      "concluida": true,
       "dataVencimento": null,
       "usuarioId": "D6sMaqqsxlA",
       "id": "FQDAf3EuzmI"
@@ -190,6 +214,48 @@
       "dataVencimento": "2026-06-15T00:00:00.000",
       "usuarioId": "D6sMaqqsxlA",
       "id": "-1-yfYODpe0"
+    },
+    {
+      "titulo": "teste",
+      "concluida": false,
+      "dataVencimento": null,
+      "usuarioId": "uE8CW8BlR8E",
+      "id": "YGlar9Rtqq4"
+    },
+    {
+      "titulo": "testte",
+      "concluida": false,
+      "dataVencimento": null,
+      "usuarioId": "D6sMaqqsxlA",
+      "id": "1dJsZ6B92LA"
+    },
+    {
+      "titulo": "teste",
+      "concluida": false,
+      "dataVencimento": "2026-06-16T00:00:00.000",
+      "usuarioId": "_AeNV7gMkgQ",
+      "id": "tshuI2QdyhY"
+    },
+    {
+      "titulo": "tesse",
+      "concluida": false,
+      "dataVencimento": null,
+      "usuarioId": "_AeNV7gMkgQ",
+      "id": "MUiGaWMpmLI"
+    },
+    {
+      "titulo": "hhh",
+      "concluida": true,
+      "dataVencimento": "2026-06-15T00:00:00.000",
+      "usuarioId": "K6lkUAfEhHs",
+      "id": "Q-DBXtCPWKw"
+    },
+    {
+      "titulo": "mm",
+      "concluida": false,
+      "dataVencimento": null,
+      "usuarioId": "K6lkUAfEhHs",
+      "id": "7nNFDjn5Ubs"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

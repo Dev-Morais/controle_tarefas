@@ -122,7 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  // BOTÃO CANCELAR COM BORDA AZUL
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -163,11 +162,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 25),
                 Row(
                   children: [
-                    Expanded(child: TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancelar", style: TextStyle(color: Colors.blue)))),
+                    Expanded(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.blue, // Cor do texto e borda
+                          side: const BorderSide(color: Colors.blue, width: 1.5), // Borda azul padronizada
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                          minimumSize: const Size(100, 50),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("Cancelar"),
+                      ),
+                    ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.redAccent,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                          minimumSize: const Size(100, 50),
+                        ),
                         onPressed: () async {
                           await api.deleteDados('tarefas', tarefa["id"].toString());
                           await buscarTarefas();
