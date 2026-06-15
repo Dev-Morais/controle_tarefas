@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Import necessário
+import 'package:shared_preferences/shared_preferences.dart';
 import 'cadastro_screen.dart';
 import 'home_screen.dart';
 import 'api_service.dart';
@@ -17,6 +17,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController senhaController = TextEditingController();
   final ApiService api = ApiService();
+  
+  // 1. Variável para controlar a visibilidade da senha
+  bool _senhaVisivel = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,16 +57,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   
                   const SizedBox(height: 15),
 
-                  // CAMPO SENHA
+                  // CAMPO SENHA COM O "OLHO"
                   TextFormField(
                     controller: senhaController,
-                    obscureText: true,
+                    obscureText: !_senhaVisivel, // 2. Oculta ou mostra o texto
                     decoration: InputDecoration(
                       labelText: "Senha",
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
                       prefixIcon: const Icon(Icons.lock_outline),
+                      // 3. Adiciona o botão do olho
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _senhaVisivel ? Icons.visibility : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _senhaVisivel = !_senhaVisivel;
+                          });
+                        },
+                      ),
                     ),
                     validator: (value) => (value == null || value.isEmpty) ? "Digite a senha" : null,
                   ),
@@ -77,15 +91,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          // 1. Valida o usuário com a API
                           final usuario = await api.validarLogin(emailController.text, senhaController.text);
                           
                           if (usuario != null) {
-                            // 2. Salva o ID no SharedPreferences
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.setString('usuarioId', usuario['id'].toString());
 
-                            // 3. SUCESSO: Alerta + Navegação
                             AppAlertas.mostrar(context, "Bem-vindo!", isErro: false);
                             if (mounted) {
                               Navigator.pushReplacement(
@@ -94,7 +105,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               );
                             }
                           } else {
-                            // ERRO: Alerta
                             AppAlertas.mostrar(context, "E-mail ou senha incorretos!", isErro: true);
                           }
                         }

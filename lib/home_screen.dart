@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api_service.dart';
-import 'main.dart'; 
 import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,7 +16,6 @@ class _HomeScreenState extends State<HomeScreen> {
   List tarefas = [];
   String filtro = 'Todos';
 
-  // Método auxiliar para buscar o ID do usuário logado
   Future<String?> getUsuarioId() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('usuarioId');
@@ -46,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (id == null) return;
 
     try {
-      // Busca filtrada pelo ID do usuário
       final dados = await api.getDados('tarefas', usuarioId: id);
       setState(() { tarefas = dados; });
     } catch (e) {
@@ -109,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             "titulo": controller.text,
                             "concluida": tarefa?["concluida"] ?? false,
                             "dataVencimento": dataSelecionada?.toIso8601String(),
-                            "usuarioId": idUsuario, // Vínculo com o usuário
+                            "usuarioId": idUsuario,
                           };
                           
                           if (tarefa == null) {
@@ -189,17 +186,6 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (route) => false);
             },
           ),
-          ValueListenableBuilder<ThemeMode>(
-            valueListenable: themeNotifier,
-            builder: (_, currentMode, __) {
-              return IconButton(
-                icon: Icon(currentMode == ThemeMode.light ? Icons.dark_mode : Icons.light_mode),
-                onPressed: () {
-                  themeNotifier.value = currentMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
-                },
-              );
-            },
-          ),
         ],
       ),
       body: Center(
@@ -246,17 +232,39 @@ class _HomeScreenState extends State<HomeScreen> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                       margin: const EdgeInsets.only(bottom: 10),
                       child: ListTile(
-                        leading: Checkbox(value: tarefa["concluida"], onChanged: (val) async {
-                          Map<String, dynamic> alt = Map.from(tarefa);
-                          alt["concluida"] = val;
-                          await api.putDados('tarefas', tarefa["id"].toString(), alt);
-                          await buscarTarefas();
-                        }),
-                        title: Text(tarefa["titulo"], style: const TextStyle(fontWeight: FontWeight.bold)),
+                        leading: IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          icon: Icon(
+                            tarefa["concluida"] 
+                                ? Icons.check_circle_rounded 
+                                : Icons.radio_button_unchecked_rounded,
+                            color: tarefa["concluida"] ? Colors.blue : Colors.grey,
+                            size: 28,
+                          ),
+                          onPressed: () async {
+                            Map<String, dynamic> alt = Map.from(tarefa);
+                            alt["concluida"] = !tarefa["concluida"];
+                            await api.putDados('tarefas', tarefa["id"].toString(), alt);
+                            await buscarTarefas();
+                          },
+                        ),
+                        title: Text(
+                          tarefa["titulo"], 
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            decoration: tarefa["concluida"] ? TextDecoration.lineThrough : null,
+                            color: tarefa["concluida"] ? Colors.grey : Colors.black,
+                          )
+                        ),
                         subtitle: tarefa["dataVencimento"] != null 
                             ? Text(
                                 "Vence em: ${tarefa["dataVencimento"].split('T')[0]}",
-                                style: TextStyle(color: estaVencido ? Colors.red : null, fontWeight: estaVencido ? FontWeight.bold : null),
+                                style: TextStyle(
+                                  color: estaVencido ? Colors.red : (tarefa["concluida"] ? Colors.grey : null), 
+                                  fontWeight: estaVencido ? FontWeight.bold : null,
+                                  decoration: tarefa["concluida"] ? TextDecoration.lineThrough : null,
+                                ),
                               ) 
                             : null,
                         trailing: Row(mainAxisSize: MainAxisSize.min, children: [

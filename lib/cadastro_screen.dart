@@ -16,6 +16,9 @@ class _CadastroScreenState extends State<CadastroScreen> {
   final nomeController = TextEditingController();
   final emailController = TextEditingController();
   final senhaController = TextEditingController();
+  
+  // 1. Variável de estado para visibilidade
+  bool _senhaVisivel = false;
 
   Future<void> realizarCadastro() async {
     showDialog(
@@ -48,6 +51,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
     }
   }
 
+  // Decoração padrão (sem o ícone suffix)
   InputDecoration _buildInputDecoration(String label, IconData icon) {
     return InputDecoration(
       labelText: label,
@@ -61,11 +65,11 @@ class _CadastroScreenState extends State<CadastroScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Alterado para branco
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text("Criar Conta", style: TextStyle(color: Colors.white)), 
         centerTitle: true,
-        backgroundColor: Colors.blue, // Mantido azul
+        backgroundColor: Colors.blue,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -101,10 +105,18 @@ class _CadastroScreenState extends State<CadastroScreen> {
                     ),
                     const SizedBox(height: 15),
 
+                    // CAMPO SENHA COM O "OLHO"
                     TextFormField(
                       controller: senhaController,
-                      obscureText: true,
-                      decoration: _buildInputDecoration("Senha", Icons.lock_outline),
+                      obscureText: !_senhaVisivel,
+                      decoration: _buildInputDecoration("Senha", Icons.lock_outline).copyWith(
+                        suffixIcon: IconButton(
+                          icon: Icon(_senhaVisivel ? Icons.visibility : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() => _senhaVisivel = !_senhaVisivel);
+                          },
+                        ),
+                      ),
                       validator: (v) => (v == null || v.length < 6) ? "Mínimo 6 caracteres" : null,
                     ),
                     
