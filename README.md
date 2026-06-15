@@ -1,25 +1,22 @@
-# Controle de Tarefas
+# Controle de Tarefas App 🚀
 
-Aplicativo de gerenciamento de tarefas pessoais desenvolvido com Flutter. O projeto permite que o usuário gerencie suas atividades diárias através de operações de CRUD, contando com autenticação de usuários e visualização estatística de desempenho.
+Projeto desenvolvido em Flutter para a disciplina de [Desenvolvimento para Dispositivos Móveis]. Um app completo de gerenciamento de tarefas com autenticação e persistência de dados.
 
-## 🚀 Tecnologias Utilizadas
-- **Linguagem:** Dart
-- **Framework:** Flutter
-- **Banco de Dados/API:** JSON Server (utilizando `db.json` para simular uma API RESTful)
-- **Gráficos:** `fl_chart`
-- **Gerenciamento de Estado:** State Management do Flutter (`setState`)
+## 🛠 Tecnologias Utilizadas
+- **Framework:** Flutter (v3.44.0)
+- **Gerenciamento de Estado:** setState
+- **Persistência:** API REST (JSON Server)
+- **Gráficos:** fl_chart
 
-## 📋 Pré-requisitos
-Antes de começar, certifique-se de ter instalado em sua máquina:
-- [Flutter SDK](https://docs.flutter.dev/get-started/install)
-- [Node.js](https://nodejs.org/) (necessário para o JSON Server)
+## 📋 Funcionalidades
+- ✅ Login e Cadastro de Usuário
+- ✅ CRUD completo de Tarefas (Criar, Ler, Editar, Excluir)
+- ✅ Dashboard com gráfico de produtividade
+- ✅ Navegação intuitiva entre telas
 
-## ⚙️ Como executar o projeto
-
-Siga os passos abaixo para rodar o projeto localmente:
-
-### 1. Clonar o repositório
-```bash
-git clone [https://github.com/SEU_USUARIO/NOME_DO_REPOSITORIO.git](https://github.com/SEU_USUARIO/NOME_DO_REPOSITORIO.git)
-cd NOME_DO_REPOSITORIO
-
+## 💻 Como rodar
+1. Certifique-se de ter o Flutter e o Node.js instalado.
+2. Clone este repositório: `git clone https://github.com/Dev-Morais/controle_tarefas.git`
+3. Instale o JSON Server: `npm install -g json-server`
+4. Inicie a API: `json-server --watch db.json`
+5. Execute o Flutter: `flutter run`
