@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'cadastro_screen.dart';
 import 'home_screen.dart';
 import 'api_service.dart';
-import 'main.dart'; 
+import 'main.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,8 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController senhaController = TextEditingController();
   final ApiService api = ApiService();
-  
-  // 1. Variável para controlar a visibilidade da senha
+
   bool _senhaVisivel = false;
 
   @override
@@ -42,7 +41,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Icon(Icons.task_alt, size: 100, color: Colors.blue),
                   const SizedBox(height: 20),
 
-                  // CAMPO E-MAIL
                   TextFormField(
                     controller: emailController,
                     decoration: InputDecoration(
@@ -54,57 +52,52 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     validator: (value) => (value == null || value.isEmpty) ? "Digite o e-mail" : null,
                   ),
-                  
                   const SizedBox(height: 15),
 
-                  // CAMPO SENHA COM O "OLHO"
                   TextFormField(
                     controller: senhaController,
-                    obscureText: !_senhaVisivel, // 2. Oculta ou mostra o texto
+                    obscureText: !_senhaVisivel,
                     decoration: InputDecoration(
                       labelText: "Senha",
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
                       prefixIcon: const Icon(Icons.lock_outline),
-                      // 3. Adiciona o botão do olho
                       suffixIcon: IconButton(
-                        icon: Icon(
-                          _senhaVisivel ? Icons.visibility : Icons.visibility_off,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _senhaVisivel = !_senhaVisivel;
-                          });
-                        },
+                        icon: Icon(_senhaVisivel ? Icons.visibility : Icons.visibility_off),
+                        onPressed: () => setState(() => _senhaVisivel = !_senhaVisivel),
                       ),
                     ),
                     validator: (value) => (value == null || value.isEmpty) ? "Digite a senha" : null,
                   ),
-                  
                   const SizedBox(height: 20),
 
-                  // BOTÃO ENTRAR
                   SizedBox(
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          final usuario = await api.validarLogin(emailController.text, senhaController.text);
-                          
-                          if (usuario != null) {
+                          // AQUI ESTÁ A MELHORIA: Recebe o Map do ApiService
+                          final resultado = await api.validarLogin(emailController.text, senhaController.text);
+
+                          if (resultado["status"] == "sucesso") {
+                            var usuario = resultado["usuario"];
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.setString('usuarioId', usuario['id'].toString());
 
+                            bool isAdmin = usuario['id'].toString() == '566YbBnjL0g';
+                            await prefs.setBool('isAdmin', isAdmin);
+
                             AppAlertas.mostrar(context, "Bem-vindo!", isErro: false);
                             if (mounted) {
-                              Navigator.pushReplacement(
-                                context, 
-                                MaterialPageRoute(builder: (context) => const HomeScreen())
-                              );
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
                             }
+                          } else if (resultado["status"] == "bloqueado") {
+                            // MENSAGEM PERSONALIZADA DE BLOQUEIO
+                            AppAlertas.mostrar(context, "Conta bloqueada! Fale com o administrador.", isErro: true);
                           } else {
+                            // MENSAGEM DE ERRO COMUM
                             AppAlertas.mostrar(context, "E-mail ou senha incorretos!", isErro: true);
                           }
                         }
@@ -117,16 +110,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text("Entrar", style: TextStyle(fontSize: 16)),
                     ),
                   ),
-                  
-                  const SizedBox(height: 15),
 
-                  // BOTÃO CRIAR CONTA
+                  const SizedBox(height: 15),
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const CadastroScreen()));
-                      },
+                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CadastroScreen())),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 15),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

@@ -1,124 +1,17 @@
 {
   "usuarios": [
     {
-      "nome": "gabriel morais",
-      "email": "gabriel.morais3344@gmail.com",
-      "senha": "123456",
-      "id": "KVXmWHwT8QU"
-    },
-    {
-      "nome": "gabriel morais",
-      "email": "gabriel.morais3344@gmail.com",
-      "senha": "123456",
-      "id": "fPE3rtr5hss"
-    },
-    {
-      "nome": "gabriel m",
-      "email": "gabriel.12@gamil.com",
-      "senha": "123456",
-      "id": "Vlg8s335lYc"
-    },
-    {
-      "nome": "gabriel m",
-      "email": "gabrie.12@gmail.com",
-      "senha": "123456",
-      "id": "i2fjskmvi_k"
-    },
-    {
-      "nome": "gbarie",
-      "email": "gabrie.m@gmail.com",
-      "senha": "123456",
-      "id": "d4arIpv64oA"
-    },
-    {
       "nome": "gabrie",
       "email": "gabrielm12@gmail.com",
       "senha": "123456",
-      "id": "D6sMaqqsxlA"
-    },
-    {
-      "nome": "gabriel",
-      "email": "gbariel.morais3344@gmail.com",
-      "senha": "123456",
-      "id": "SNdnmduozRA"
-    },
-    {
-      "nome": "gabriel",
-      "email": "gabrielm12@gamil.com",
-      "senha": "123456",
-      "id": "uE8CW8BlR8E"
-    },
-    {
-      "nome": "gabriel m",
-      "email": "adimin@admin",
-      "senha": "123456",
-      "id": "rDK1Sn5ujNM"
+      "id": "D6sMaqqsxlA",
+      "bloqueado": false
     },
     {
       "nome": "admin",
       "email": "admin@admin",
       "senha": "123456",
       "id": "566YbBnjL0g"
-    },
-    {
-      "nome": "lelehh",
-      "email": "elerrandra_879@gmail.com",
-      "senha": "jenny1",
-      "id": "WJY9TghWPI4"
-    },
-    {
-      "nome": "gabriel",
-      "email": "gabrielm22@gmail.com",
-      "senha": "123456",
-      "id": "5zFUlLgHSH8"
-    },
-    {
-      "nome": "teste",
-      "email": "teste@teste.com",
-      "senha": "123456",
-      "id": "GTDAeH6LfIc"
-    },
-    {
-      "nome": "teste2",
-      "email": "teste2@gmail.com",
-      "senha": "123456",
-      "id": "BvAeaWzEvXQ"
-    },
-    {
-      "nome": "22222",
-      "email": "4555455@gmail.com",
-      "senha": "123456",
-      "id": "39yocHWSd5M"
-    },
-    {
-      "nome": "gabriel m",
-      "email": "gabriel.m11@gmail.com",
-      "senha": "1234567",
-      "id": "2EExSrRMfwM"
-    },
-    {
-      "nome": "maria",
-      "email": "maria223@gmail.com",
-      "senha": "123456",
-      "id": "1EWdfWFDADY"
-    },
-    {
-      "nome": "teste",
-      "email": "teste.22@gmail.com",
-      "senha": "123456",
-      "id": "Mv0fuVvXze0"
-    },
-    {
-      "nome": "teste",
-      "email": "teste23@gmail.com",
-      "senha": "123456",
-      "id": "_AeNV7gMkgQ"
-    },
-    {
-      "nome": "maria",
-      "email": "maria34@gmail.com",
-      "senha": "123456",
-      "id": "K6lkUAfEhHs"
     }
   ],
   "tarefas": [
@@ -139,123 +32,28 @@
       "id": "4sHLbbNSBRw"
     },
     {
-      "titulo": "estudar",
-      "concluida": false,
-      "dataVencimento": null,
-      "usuarioId": "rDK1Sn5ujNM",
-      "id": "1daHAVi7Jh8"
-    },
-    {
-      "titulo": "fazer um trabalho",
-      "concluida": true,
-      "dataVencimento": null,
-      "usuarioId": "rDK1Sn5ujNM",
-      "id": "KN1Qd0LSCyk"
-    },
-    {
-      "titulo": "estuda matematica",
-      "concluida": false,
-      "dataVencimento": "2026-06-15T00:00:00.000",
-      "usuarioId": "WJY9TghWPI4",
-      "id": "bi_JO3ams2c"
-    },
-    {
-      "titulo": "teste2",
-      "concluida": false,
-      "dataVencimento": null,
-      "usuarioId": "5zFUlLgHSH8",
-      "id": "YctwyHKFmAc"
-    },
-    {
-      "titulo": "teste3",
-      "concluida": false,
-      "dataVencimento": "2026-06-15T00:00:00.000",
-      "usuarioId": "5zFUlLgHSH8",
-      "id": "dxTXAGjAzi4"
-    },
-    {
-      "titulo": "testekk",
-      "concluida": false,
-      "dataVencimento": "2026-06-15T00:00:00.000",
-      "usuarioId": "GTDAeH6LfIc",
-      "id": "MrVjre-yQGQ"
-    },
-    {
-      "titulo": "teste22",
-      "concluida": false,
-      "dataVencimento": "2026-06-15T00:00:00.000",
-      "usuarioId": "BvAeaWzEvXQ",
-      "id": "6dCWFtF6MAQ"
-    },
-    {
-      "titulo": "teste33",
-      "concluida": false,
-      "dataVencimento": "2026-06-15T00:00:00.000",
-      "usuarioId": "BvAeaWzEvXQ",
-      "id": "uc_IPVdCZn0"
-    },
-    {
-      "titulo": "testee",
-      "concluida": true,
-      "dataVencimento": null,
-      "usuarioId": "D6sMaqqsxlA",
-      "id": "FQDAf3EuzmI"
-    },
-    {
       "titulo": "teste",
-      "concluida": false,
-      "dataVencimento": null,
-      "usuarioId": "2EExSrRMfwM",
-      "id": "LUVPmQJLpCM"
-    },
-    {
-      "titulo": "testtt",
-      "concluida": false,
-      "dataVencimento": "2026-06-15T00:00:00.000",
+      "concluida": true,
       "usuarioId": "D6sMaqqsxlA",
       "id": "-1-yfYODpe0"
     },
     {
-      "titulo": "teste",
+      "titulo": "teste22",
       "concluida": false,
-      "dataVencimento": null,
-      "usuarioId": "uE8CW8BlR8E",
-      "id": "YGlar9Rtqq4"
-    },
-    {
-      "titulo": "testte",
-      "concluida": false,
-      "dataVencimento": null,
       "usuarioId": "D6sMaqqsxlA",
-      "id": "1dJsZ6B92LA"
+      "id": "vJX46r0bCX4"
     },
     {
       "titulo": "teste",
-      "concluida": false,
-      "dataVencimento": "2026-06-16T00:00:00.000",
-      "usuarioId": "_AeNV7gMkgQ",
-      "id": "tshuI2QdyhY"
-    },
-    {
-      "titulo": "tesse",
-      "concluida": false,
-      "dataVencimento": null,
-      "usuarioId": "_AeNV7gMkgQ",
-      "id": "MUiGaWMpmLI"
-    },
-    {
-      "titulo": "hhh",
       "concluida": true,
-      "dataVencimento": "2026-06-15T00:00:00.000",
-      "usuarioId": "K6lkUAfEhHs",
-      "id": "Q-DBXtCPWKw"
+      "usuarioId": "566YbBnjL0g",
+      "id": "LsiJvzJYKDE"
     },
     {
-      "titulo": "mm",
+      "titulo": "testerj",
       "concluida": false,
-      "dataVencimento": null,
-      "usuarioId": "K6lkUAfEhHs",
-      "id": "7nNFDjn5Ubs"
+      "usuarioId": "D6sMaqqsxlA",
+      "id": "4t1QNpv1rvM"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api_service.dart';
 import 'login_screen.dart';
+import 'admin_dashboard.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,127 +17,94 @@ class _HomeScreenState extends State<HomeScreen> {
   List tarefas = [];
   String filtro = 'Todos';
 
-  Future<String?> getUsuarioId() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('usuarioId');
-  }
-
-  List get tarefasFiltradas {
-    if (filtro == 'Pendentes') {
-      return tarefas.where((t) => t["concluida"] == false).toList();
-    } else if (filtro == 'Concluídas') {
-      return tarefas.where((t) => t["concluida"] == true).toList();
-    }
-    return tarefas;
-  }
-
-  int get concluidas => tarefas.where((t) => t["concluida"] == true).length;
-  int get pendentes => tarefas.where((t) => t["concluida"] == false).length;
-
   @override
   void initState() {
     super.initState();
     buscarTarefas();
   }
 
+  Future<String?> getUsuarioId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('usuarioId');
+  }
+
+  List get tarefasFiltradas {
+    if (filtro == 'Pendentes') return tarefas.where((t) => t["concluida"] == false).toList();
+    if (filtro == 'Concluídas') return tarefas.where((t) => t["concluida"] == true).toList();
+    return tarefas;
+  }
+
+  int get concluidas => tarefas.where((t) => t["concluida"] == true).length;
+  int get pendentes => tarefas.where((t) => t["concluida"] == false).length;
+
   Future<void> buscarTarefas() async {
     String? id = await getUsuarioId();
     if (id == null) return;
-
     try {
       final dados = await api.getDados('tarefas', usuarioId: id);
       setState(() { tarefas = dados; });
-    } catch (e) {
-      debugPrint("Erro ao buscar: $e");
-    }
+    } catch (e) { debugPrint("Erro ao buscar: $e"); }
   }
 
   void _showTarefaDialog({Map<String, dynamic>? tarefa}) async {
     TextEditingController controller = TextEditingController(text: tarefa?["titulo"] ?? "");
-    DateTime? dataSelecionada = tarefa != null && tarefa["dataVencimento"] != null 
-        ? DateTime.parse(tarefa["dataVencimento"]) 
-        : null;
-
     String? idUsuario = await getUsuarioId();
 
     showDialog(
       context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(tarefa == null ? "Nova Tarefa" : "Editar Tarefa", 
-                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 15),
-                  TextField(
-                    controller: controller,
-                    decoration: InputDecoration(labelText: "Descrição", border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
-                  ),
-                  const SizedBox(height: 15),
-                  ListTile(
-                    title: Text(dataSelecionada == null ? "Definir data de vencimento" : "Vence em: ${dataSelecionada.toString().split(' ')[0]}"),
-                    leading: const Icon(Icons.calendar_today),
-                    onTap: () async {
-                      DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: dataSelecionada ?? DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime(2100),
-                      );
-                      if (picked != null) {
-                        setDialogState(() => dataSelecionada = picked);
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(tarefa == null ? "Nova Tarefa" : "Editar Tarefa", 
+                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 15),
+                TextField(
+                  controller: controller,
+                  decoration: InputDecoration(labelText: "Descrição", border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                    onPressed: () async {
+                      if (controller.text.isNotEmpty && idUsuario != null) {
+                        Map<String, dynamic> dados = {
+                          "titulo": controller.text,
+                          "concluida": tarefa?["concluida"] ?? false,
+                          "usuarioId": idUsuario
+                        };
+                        if (tarefa == null) await api.postDados('tarefas', dados);
+                        else await api.putDados('tarefas', tarefa["id"].toString(), dados);
+                        await buscarTarefas();
+                        if (mounted) Navigator.pop(context);
                       }
                     },
+                    child: const Text("Salvar"),
                   ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-                      onPressed: () async {
-                        if (controller.text.isNotEmpty && idUsuario != null) {
-                          Map<String, dynamic> dados = {
-                            "titulo": controller.text,
-                            "concluida": tarefa?["concluida"] ?? false,
-                            "dataVencimento": dataSelecionada?.toIso8601String(),
-                            "usuarioId": idUsuario,
-                          };
-                          
-                          if (tarefa == null) {
-                            await api.postDados('tarefas', dados);
-                          } else {
-                            await api.putDados('tarefas', tarefa["id"].toString(), dados);
-                          }
-                          await buscarTarefas();
-                          if (mounted) Navigator.pop(context);
-                        }
-                      },
-                      child: const Text("Salvar"),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.blue,
+                      side: const BorderSide(color: Colors.blue, width: 1.5),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                     ),
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancelar"),
                   ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.blue,
-                        side: const BorderSide(color: Colors.blue, width: 1.5),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text("Cancelar"),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -165,8 +133,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.blue, // Cor do texto e borda
-                          side: const BorderSide(color: Colors.blue, width: 1.5), // Borda azul padronizada
+                          foregroundColor: Colors.blue,
+                          side: const BorderSide(color: Colors.blue, width: 1.5),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                           minimumSize: const Size(100, 50),
                         ),
@@ -205,16 +173,26 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Controle de Tarefas"), 
-        centerTitle: true, 
-        backgroundColor: Colors.blue, 
+        title: const Text("Controle de Tarefas"),
+        centerTitle: true,
+        backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
         actions: [
+          FutureBuilder<bool>(
+            future: SharedPreferences.getInstance().then((p) => p.getBool('isAdmin') ?? false),
+            builder: (context, snapshot) {
+              if (snapshot.data == true) {
+                return IconButton(
+                  icon: const Icon(Icons.admin_panel_settings, color: Colors.yellow),
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminDashboardScreen())),
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (route) => false);
-            },
+            onPressed: () => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false),
           ),
         ],
       ),
@@ -237,9 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ButtonSegment(value: 'Concluídas', label: Text('Concluídas')),
                     ],
                     selected: {filtro},
-                    onSelectionChanged: (newSelection) {
-                      setState(() => filtro = newSelection.first);
-                    },
+                    onSelectionChanged: (newSelection) => setState(() => filtro = newSelection.first),
                   ),
                 ),
               ],
@@ -249,28 +225,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemCount: tarefasFiltradas.length,
                   itemBuilder: (context, index) {
                     final tarefa = tarefasFiltradas[index];
-                    bool estaVencido = false;
-                    if (tarefa["dataVencimento"] != null) {
-                      DateTime dataVenc = DateTime.parse(tarefa["dataVencimento"]);
-                      DateTime hoje = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-                      if (dataVenc.isBefore(hoje)) {
-                        estaVencido = true;
-                      }
-                    }
-
                     return Card(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                      margin: const EdgeInsets.only(bottom: 10),
                       child: ListTile(
                         leading: IconButton(
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
                           icon: Icon(
-                            tarefa["concluida"] 
-                                ? Icons.check_circle_rounded 
-                                : Icons.radio_button_unchecked_rounded,
+                            tarefa["concluida"] ? Icons.check_circle : Icons.radio_button_unchecked,
                             color: tarefa["concluida"] ? Colors.blue : Colors.grey,
-                            size: 28,
                           ),
                           onPressed: () async {
                             Map<String, dynamic> alt = Map.from(tarefa);
@@ -279,24 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             await buscarTarefas();
                           },
                         ),
-                        title: Text(
-                          tarefa["titulo"], 
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            decoration: tarefa["concluida"] ? TextDecoration.lineThrough : null,
-                            color: tarefa["concluida"] ? Colors.grey : Colors.black,
-                          )
-                        ),
-                        subtitle: tarefa["dataVencimento"] != null 
-                            ? Text(
-                                "Vence em: ${tarefa["dataVencimento"].split('T')[0]}",
-                                style: TextStyle(
-                                  color: estaVencido ? Colors.red : (tarefa["concluida"] ? Colors.grey : null), 
-                                  fontWeight: estaVencido ? FontWeight.bold : null,
-                                  decoration: tarefa["concluida"] ? TextDecoration.lineThrough : null,
-                                ),
-                              ) 
-                            : null,
+                        title: Text(tarefa["titulo"]),
                         trailing: Row(mainAxisSize: MainAxisSize.min, children: [
                           IconButton(icon: const Icon(Icons.edit, color: Colors.blue), onPressed: () => _showTarefaDialog(tarefa: tarefa)),
                           IconButton(icon: const Icon(Icons.delete, color: Colors.redAccent), onPressed: () => excluirTarefa(tarefa)),

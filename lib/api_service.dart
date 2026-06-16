@@ -52,16 +52,30 @@ class ApiService {
     return usuarios.any((user) => user['email'] == email);
   }
 
-  Future<Map<String, dynamic>?> validarLogin(String email, String senha) async {
-    final response = await http.get(Uri.parse('$baseUrl/usuarios'));
-    List usuarios = json.decode(response.body);
+// No seu ApiService.dart
+Future<Map<String, dynamic>> validarLogin(String email, String senha) async {
+  final response = await http.get(Uri.parse('$baseUrl/usuarios'));
+  if (response.statusCode != 200) return {"status": "erro_conexao"};
+
+  List usuarios = json.decode(response.body);
+  
+  try {
+    var user = usuarios.firstWhere(
+      (u) => u['email'].toString().trim() == email.trim() && 
+            u['senha'].toString().trim() == senha.trim(),
+    );
+
+    bool estaBloqueado = user['bloqueado'].toString().toLowerCase() == 'true';
     
-    try {
-      return usuarios.firstWhere(
-        (user) => user['email'] == email && user['senha'] == senha,
-      );
-    } catch (e) {
-      return null;
+    if (estaBloqueado && user['email'] != 'admin@admin') {
+      return {"status": "bloqueado"}; 
     }
+
+    // Retorna o status e o objeto do usuário completo!
+    return {"status": "sucesso", "usuario": user}; 
+    
+  } catch (e) {
+    return {"status": "incorreto"}; 
   }
+}
 }
