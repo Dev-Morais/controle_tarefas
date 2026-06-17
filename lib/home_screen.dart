@@ -4,6 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'api_service.dart';
 import 'login_screen.dart';
 import 'admin_dashboard.dart';
+// Imports adicionados para as novas telas
+import 'perfil_screen.dart';
+import 'config_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,11 +19,21 @@ class _HomeScreenState extends State<HomeScreen> {
   final ApiService api = ApiService();
   List tarefas = [];
   String filtro = 'Todos';
+  String nomeUsuario = ""; // Começa vazio
 
   @override
   void initState() {
     super.initState();
-    buscarTarefas();
+    _carregarDadosIniciais();
+  }
+
+  Future<void> _carregarDadosIniciais() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      // Pega o nome, se for nulo usa "U"
+      nomeUsuario = prefs.getString('nomeUsuario') ?? "U"; 
+      buscarTarefas();
+    });
   }
 
   Future<String?> getUsuarioId() async {
@@ -190,9 +203,41 @@ class _HomeScreenState extends State<HomeScreen> {
               return const SizedBox.shrink();
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false),
+          // Menu de Perfil customizado
+          PopupMenuButton<String>(
+            offset: const Offset(0, 55), // Deslocamento para não cobrir o gráfico
+            child: Padding(
+              padding: const EdgeInsets.only(right: 15),
+              child: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Text(
+                  nomeUsuario.isNotEmpty ? nomeUsuario[0].toUpperCase() : "?", 
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                ),
+              ),
+            ),
+            onSelected: (value) async {
+              if (value == 'perfil') {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const PerfilScreen()));
+              } else if (value == 'config') {
+                // Ao voltar da tela de configuração, recarregamos os dados
+                final alterou = await Navigator.push(context, MaterialPageRoute(builder: (_) => const ConfigScreen()));
+                if (alterou == true) {
+                  _carregarDadosIniciais();
+                }
+              } else if (value == 'sair') {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.clear();
+                if (mounted) Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false);
+              }
+            },
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem(value: 'perfil', child: Text("Ver Perfil", style: TextStyle(color: Colors.black87))),
+              const PopupMenuItem(value: 'config', child: Text("Configurar Conta", style: TextStyle(color: Colors.black87))),
+              const PopupMenuDivider(),
+              const PopupMenuItem(value: 'sair', child: Text("Sair", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold))),
+            ],
           ),
         ],
       ),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import 'splash_screen.dart';
+import 'home_screen.dart';
+import 'perfil_screen.dart';
+import 'alterar_senha_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +26,15 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.grey[100],
       ),
-      home: const SplashScreen(), 
+      // Navegação por rotas nomeadas
+      initialRoute: '/', 
+      routes: {
+        '/': (context) => const SplashScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/home': (context) => const HomeScreen(),
+        '/perfil': (context) => const PerfilScreen(),
+        '/alterar_senha': (context) => const AlterarSenhaScreen(),
+      },
     );
   }
 }

@@ -1,7 +1,7 @@
 {
   "usuarios": [
     {
-      "nome": "gabrie",
+      "nome": "gabriel",
       "email": "gabrielm12@gmail.com",
       "senha": "123456",
       "id": "D6sMaqqsxlA",
@@ -12,6 +12,12 @@
       "email": "admin@admin",
       "senha": "123456",
       "id": "566YbBnjL0g"
+    },
+    {
+      "nome": "maria raimunda",
+      "email": "maria.r@hotmail.com",
+      "senha": "123456",
+      "id": "ELp36DIWCsk"
     }
   ],
   "tarefas": [
@@ -45,7 +51,7 @@
     },
     {
       "titulo": "teste",
-      "concluida": true,
+      "concluida": false,
       "usuarioId": "566YbBnjL0g",
       "id": "LsiJvzJYKDE"
     },
@@ -54,6 +60,12 @@
       "concluida": false,
       "usuarioId": "D6sMaqqsxlA",
       "id": "4t1QNpv1rvM"
+    },
+    {
+      "titulo": "rrrr",
+      "concluida": false,
+      "usuarioId": "ELp36DIWCsk",
+      "id": "oRtiggqLIS0"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

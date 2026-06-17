@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'api_service.dart';
 import 'main.dart'; 
+import 'user_data.dart'; // Certifique-se de importar o arquivo onde está a classe UserData
 
 class CadastroScreen extends StatefulWidget {
   const CadastroScreen({super.key});
@@ -38,6 +39,10 @@ class _CadastroScreenState extends State<CadastroScreen> {
           "email": emailController.text,
           "senha": senhaController.text,
         });
+        
+        // MODIFICAÇÃO SOLICITADA: Salvar dados localmente
+        UserData.instance.nome = nomeController.text;
+        UserData.instance.email = emailController.text;
         
         if (!mounted) return;
         Navigator.pop(context); 

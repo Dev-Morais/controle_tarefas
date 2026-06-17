@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'api_service.dart';
 import 'usertaskssreen.dart';
+
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
 
@@ -50,7 +51,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Painel do Administrador 👑"),
-        backgroundColor: Colors.indigo,
+        backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
       ),
       body: carregando
@@ -66,7 +67,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     ],
                   ),
                 ),
-                // Filtro que navega para a nova tela
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: DropdownButtonFormField<String>(
@@ -85,7 +85,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     onChanged: (val) {
                       if (val != null && val != "0") {
                         final user = usuarios.firstWhere((u) => u['id'].toString() == val);
-                        // AQUI ESTÁ A MELHORIA: Navegação para a nova tela
+                        // Melhoria aplicada aqui:
                         Navigator.push(
                           context, 
                           MaterialPageRoute(
@@ -94,13 +94,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                               nomeUsuario: user['nome'] ?? 'Usuário'
                             )
                           ),
-                        );
+                        ).then((_) => _carregarDados()); // <--- Sincroniza ao voltar
                       }
                     },
                   ),
                 ),
                 
-                // Lista de Usuários para Gestão (Bloqueio/Exclusão)
                 const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text("Gestão de Usuários:", style: TextStyle(fontWeight: FontWeight.bold)),
@@ -156,12 +155,24 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Confirmar Exclusão"),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: const Text("Confirmar Exclusão", style: TextStyle(fontWeight: FontWeight.bold)),
         content: Text("Deseja deletar ${user['nome']} e TODAS as suas tarefas?"),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancelar")),
+          OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(color: Colors.blue, width: 1.5),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancelar", style: TextStyle(color: Colors.blue)),
+          ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
             onPressed: () async {
               await api.deleteDados('usuarios', user['id'].toString());
               final tarefasDoUser = todasTarefas.where((t) => t['usuarioId'].toString() == user['id'].toString());
@@ -171,7 +182,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               if (mounted) Navigator.pop(context);
               _carregarDados();
             },
-            child: const Text("Confirmar", style: TextStyle(color: Colors.white)),
+            child: const Text("Confirmar"),
           ),
         ],
       ),

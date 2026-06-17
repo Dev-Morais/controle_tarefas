@@ -3,7 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'cadastro_screen.dart';
 import 'home_screen.dart';
 import 'api_service.dart';
-import 'main.dart';
+import 'main.dart'; 
+import 'user_data.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -78,14 +79,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          // AQUI ESTÁ A MELHORIA: Recebe o Map do ApiService
                           final resultado = await api.validarLogin(emailController.text, senhaController.text);
 
                           if (resultado["status"] == "sucesso") {
                             var usuario = resultado["usuario"];
+                            
+                            // GERENCIAMENTO DE DADOS LOCAIS CORRIGIDO
+                            UserData.instance.setDados(
+                              usuario['id'].toString(), 
+                              usuario['nome'], 
+                              usuario['email']
+                            );
+                            
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.setString('usuarioId', usuario['id'].toString());
-
+                            await prefs.setString('nomeUsuario', usuario['nome']);
+                            await prefs.setString('userSenha', usuario['senha'].toString());
+                            
                             bool isAdmin = usuario['id'].toString() == '566YbBnjL0g';
                             await prefs.setBool('isAdmin', isAdmin);
 
@@ -94,10 +104,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
                             }
                           } else if (resultado["status"] == "bloqueado") {
-                            // MENSAGEM PERSONALIZADA DE BLOQUEIO
                             AppAlertas.mostrar(context, "Conta bloqueada! Fale com o administrador.", isErro: true);
                           } else {
-                            // MENSAGEM DE ERRO COMUM
                             AppAlertas.mostrar(context, "E-mail ou senha incorretos!", isErro: true);
                           }
                         }
