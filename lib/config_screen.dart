@@ -17,7 +17,6 @@ class _ConfigScreenState extends State<ConfigScreen> {
   String _idiomaAtual = "Português (Brasil)";
   String _senhaDoUsuario = "";
 
-  // 1. DICIONÁRIO DE TRADUÇÕES
   final Map<String, Map<String, String>> _traducoes = {
     "Português (Brasil)": {
       "config": "Configurações",
@@ -43,7 +42,6 @@ class _ConfigScreenState extends State<ConfigScreen> {
     },
   };
 
-  // 2. FUNÇÃO DE TRADUÇÃO
   String _traduzir(String chave) {
     return _traducoes[_idiomaAtual]?[chave] ?? chave;
   }
@@ -106,15 +104,14 @@ class _ConfigScreenState extends State<ConfigScreen> {
       title: Text(idioma, style: const TextStyle(fontWeight: FontWeight.w500)),
       trailing: _idiomaAtual == idioma ? const Icon(Icons.check, color: Colors.blue) : null,
       onTap: () {
-  _salvarIdioma(idioma);
-  Navigator.pop(context);
-  
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text("${_traduzir("msg_idioma")} $idioma"),
-      backgroundColor: Colors.green,
-      behavior: SnackBarBehavior.floating, 
-        )
+        _salvarIdioma(idioma);
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("${_traduzir("msg_idioma")} $idioma"),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          )
         );
       },
     );
@@ -124,11 +121,6 @@ class _ConfigScreenState extends State<ConfigScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: Text(_traduzir("config")),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-      ),
       body: ListView(
         padding: const EdgeInsets.all(15),
         children: [
@@ -162,21 +154,52 @@ class _ConfigScreenState extends State<ConfigScreen> {
           _buildItem(Icons.delete_forever, _traduzir("deletar"), () {
             showDialog(
               context: context,
-              builder: (context) => AlertDialog(
+              builder: (context) => Dialog(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                title: const Text("Confirmar Exclusão", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
-                content: const Text("Deseja realmente apagar sua conta? Esta ação é irreversível."),
-                actions: [
-                  OutlinedButton(
-                    onPressed: () => Navigator.pop(context), 
-                    child: const Text("Cancelar"),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 400),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text("Confirmar Exclusão", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 15),
+                        const Text("Deseja realmente apagar sua conta? Esta ação é irreversível.", textAlign: TextAlign.center),
+                        const SizedBox(height: 25),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.blue,
+                                  side: const BorderSide(color: Colors.blue, width: 1.5),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                                  padding: const EdgeInsets.symmetric(vertical: 15),
+                                ),
+                                onPressed: () => Navigator.pop(context), 
+                                child: const Text("Cancelar"),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.redAccent,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                                  padding: const EdgeInsets.symmetric(vertical: 15),
+                                ),
+                                onPressed: () => _deletarConta(context), 
+                                child: const Text("DELETAR"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
-                    onPressed: () => _deletarConta(context), 
-                    child: const Text("DELETAR"),
-                  ),
-                ],
+                ),
               ),
             );
           }, color: Colors.redAccent),

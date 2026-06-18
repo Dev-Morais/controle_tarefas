@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api_service.dart';
 import 'login_screen.dart';
 import 'admin_dashboard.dart';
-// Imports adicionados para as novas telas
 import 'perfil_screen.dart';
 import 'config_screen.dart';
 
@@ -19,7 +17,9 @@ class _HomeScreenState extends State<HomeScreen> {
   final ApiService api = ApiService();
   List tarefas = [];
   String filtro = 'Todos';
-  String nomeUsuario = ""; // Começa vazio
+  String nomeUsuario = "";
+  bool isAdmin = false; 
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -30,8 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _carregarDadosIniciais() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      // Pega o nome, se for nulo usa "U"
-      nomeUsuario = prefs.getString('nomeUsuario') ?? "U"; 
+      nomeUsuario = prefs.getString('nomeUsuario') ?? "U";
+      isAdmin = prefs.getBool('isAdmin') ?? false; 
       buscarTarefas();
     });
   }
@@ -74,48 +74,54 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(tarefa == null ? "Nova Tarefa" : "Editar Tarefa", 
-                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(tarefa == null ? "Nova Tarefa" : "Editar Tarefa",
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 15),
                 TextField(
                   controller: controller,
                   decoration: InputDecoration(labelText: "Descrição", border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
                 ),
                 const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-                    onPressed: () async {
-                      if (controller.text.isNotEmpty && idUsuario != null) {
-                        Map<String, dynamic> dados = {
-                          "titulo": controller.text,
-                          "concluida": tarefa?["concluida"] ?? false,
-                          "usuarioId": idUsuario
-                        };
-                        if (tarefa == null) await api.postDados('tarefas', dados);
-                        else await api.putDados('tarefas', tarefa["id"].toString(), dados);
-                        await buscarTarefas();
-                        if (mounted) Navigator.pop(context);
-                      }
-                    },
-                    child: const Text("Salvar"),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                      side: const BorderSide(color: Colors.blue, width: 1.5),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.blue,
+                          side: const BorderSide(color: Colors.blue, width: 1.5),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("Cancelar"),
+                      ),
                     ),
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text("Cancelar"),
-                  ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                        ),
+                        onPressed: () async {
+                          if (controller.text.isNotEmpty && idUsuario != null) {
+                            Map<String, dynamic> dados = {
+                              "titulo": controller.text,
+                              "concluida": tarefa?["concluida"] ?? false,
+                              "usuarioId": idUsuario
+                            };
+                            if (tarefa == null) await api.postDados('tarefas', dados);
+                            else await api.putDados('tarefas', tarefa["id"].toString(), dados);
+                            await buscarTarefas();
+                            if (mounted) Navigator.pop(context);
+                          }
+                        },
+                        child: const Text("Salvar"),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -143,35 +149,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 25),
                 Row(
                   children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.blue,
-                          side: const BorderSide(color: Colors.blue, width: 1.5),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                          minimumSize: const Size(100, 50),
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text("Cancelar"),
-                      ),
-                    ),
+                    Expanded(child: OutlinedButton(style: OutlinedButton.styleFrom(foregroundColor: Colors.blue, side: const BorderSide(color: Colors.blue, width: 1.5), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))), onPressed: () => Navigator.pop(context), child: const Text("Cancelar"))),
                     const SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                          minimumSize: const Size(100, 50),
-                        ),
-                        onPressed: () async {
-                          await api.deleteDados('tarefas', tarefa["id"].toString());
-                          await buscarTarefas();
-                          if (mounted) Navigator.pop(context);
-                        },
-                        child: const Text("Excluir"),
-                      ),
-                    ),
+                    Expanded(child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))), onPressed: () async {
+                      await api.deleteDados('tarefas', tarefa["id"].toString());
+                      await buscarTarefas();
+                      if (mounted) Navigator.pop(context);
+                    }, child: const Text("Excluir"))),
                   ],
                 ),
               ],
@@ -184,125 +168,105 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _telas = [
+      _buildHomeScreenContent(),
+      const PerfilScreen(),
+      const ConfigScreen(),
+    ];
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Controle de Tarefas"),
-        centerTitle: true,
+        toolbarHeight: 70,
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
+        title: _selectedIndex == 0
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Olá, $nomeUsuario", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const Text("Gerencie suas tarefas", style: TextStyle(fontSize: 12)),
+                ],
+              )
+            : Text(_selectedIndex == 1 ? "Meu Perfil" : "Configurações", 
+                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         actions: [
-          FutureBuilder<bool>(
-            future: SharedPreferences.getInstance().then((p) => p.getBool('isAdmin') ?? false),
-            builder: (context, snapshot) {
-              if (snapshot.data == true) {
-                return IconButton(
-                  icon: const Icon(Icons.admin_panel_settings, color: Colors.yellow),
-                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminDashboardScreen())),
+          if (_selectedIndex == 0 && isAdmin)
+            IconButton(
+              icon: const Icon(Icons.admin_panel_settings),
+              tooltip: "Painel Administrativo",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AdminDashboardScreen()),
                 );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
-          // Menu de Perfil customizado
-          PopupMenuButton<String>(
-            offset: const Offset(0, 55), // Deslocamento para não cobrir o gráfico
-            child: Padding(
-              padding: const EdgeInsets.only(right: 15),
-              child: CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Text(
-                  nomeUsuario.isNotEmpty ? nomeUsuario[0].toUpperCase() : "?", 
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
-                ),
+              },
+            ),
+          Padding(
+            padding: const EdgeInsets.only(right: 15),
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Text(
+                nomeUsuario.isNotEmpty ? nomeUsuario[0].toUpperCase() : "?",
+                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
-            onSelected: (value) async {
-              if (value == 'perfil') {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const PerfilScreen()));
-              } else if (value == 'config') {
-                // Ao voltar da tela de configuração, recarregamos os dados
-                final alterou = await Navigator.push(context, MaterialPageRoute(builder: (_) => const ConfigScreen()));
-                if (alterou == true) {
-                  _carregarDadosIniciais();
-                }
-              } else if (value == 'sair') {
-                final prefs = await SharedPreferences.getInstance();
-                await prefs.clear();
-                if (mounted) Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false);
-              }
-            },
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            itemBuilder: (BuildContext context) => [
-              const PopupMenuItem(value: 'perfil', child: Text("Ver Perfil", style: TextStyle(color: Colors.black87))),
-              const PopupMenuItem(value: 'config', child: Text("Configurar Conta", style: TextStyle(color: Colors.black87))),
-              const PopupMenuDivider(),
-              const PopupMenuItem(value: 'sair', child: Text("Sair", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold))),
-            ],
           ),
         ],
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: Column(
-            children: [
-              if (tarefas.isNotEmpty) ...[
-                SizedBox(height: 180, child: PieChart(PieChartData(sections: [
-                  PieChartSectionData(value: concluidas.toDouble(), title: "OK", color: Colors.green, radius: 50),
-                  PieChartSectionData(value: pendentes.toDouble(), title: "Pendente", color: Colors.red, radius: 50),
-                ]))),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: SegmentedButton<String>(
-                    segments: const [
-                      ButtonSegment(value: 'Todos', label: Text('Todos')),
-                      ButtonSegment(value: 'Pendentes', label: Text('Pendentes')),
-                      ButtonSegment(value: 'Concluídas', label: Text('Concluídas')),
-                    ],
-                    selected: {filtro},
-                    onSelectionChanged: (newSelection) => setState(() => filtro = newSelection.first),
-                  ),
-                ),
-              ],
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(10),
-                  itemCount: tarefasFiltradas.length,
-                  itemBuilder: (context, index) {
-                    final tarefa = tarefasFiltradas[index];
-                    return Card(
-                      child: ListTile(
-                        leading: IconButton(
-                          icon: Icon(
-                            tarefa["concluida"] ? Icons.check_circle : Icons.radio_button_unchecked,
-                            color: tarefa["concluida"] ? Colors.blue : Colors.grey,
-                          ),
-                          onPressed: () async {
-                            Map<String, dynamic> alt = Map.from(tarefa);
-                            alt["concluida"] = !tarefa["concluida"];
-                            await api.putDados('tarefas', tarefa["id"].toString(), alt);
-                            await buscarTarefas();
-                          },
-                        ),
-                        title: Text(tarefa["titulo"]),
-                        trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-                          IconButton(icon: const Icon(Icons.edit, color: Colors.blue), onPressed: () => _showTarefaDialog(tarefa: tarefa)),
-                          IconButton(icon: const Icon(Icons.delete, color: Colors.redAccent), onPressed: () => excluirTarefa(tarefa)),
-                        ]),
-                      ),
-                    );
-                  },
-                ),
+      body: _telas[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        onTap: (index) => setState(() => _selectedIndex = index),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Configuração'),
+        ],
+      ),
+      floatingActionButton: _selectedIndex == 0
+          ? FloatingActionButton(
+              backgroundColor: Colors.blue, 
+              foregroundColor: Colors.white, 
+              shape: const CircleBorder(),
+              onPressed: () => _showTarefaDialog(), 
+              child: const Icon(Icons.add)
+            )
+          : null,
+    );
+  }
+
+  Widget _buildHomeScreenContent() {
+    double progresso = tarefas.isNotEmpty ? (concluidas / tarefas.length) : 0.0;
+    return Column(children: [Padding(padding: const EdgeInsets.all(16.0), child: Column(children: [Row(children: [_buildStatCard("Todas", tarefas.length.toString(), Colors.blue.shade50, Colors.blue), const SizedBox(width: 10), _buildStatCard("Pendentes", pendentes.toString(), Colors.orange.shade50, Colors.orange), const SizedBox(width: 10), _buildStatCard("Concluídas", concluidas.toString(), Colors.green.shade50, Colors.green)]), const SizedBox(height: 16), Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.grey.shade200)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [const Text("Progresso geral", style: TextStyle(fontWeight: FontWeight.bold)), Text("$concluidas de ${tarefas.length} concluídas")]), const SizedBox(height: 12), LinearProgressIndicator(value: progresso, backgroundColor: Colors.grey.shade200, color: Colors.green, minHeight: 8), const SizedBox(height: 8), Text("${(progresso * 100).toInt()}% concluído", style: const TextStyle(color: Colors.green, fontSize: 12, fontWeight: FontWeight.bold))]))])), Container(margin: const EdgeInsets.symmetric(horizontal: 16), padding: const EdgeInsets.all(4), decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(30)), child: Row(children: [_buildFilterButton("Todos", Colors.blue), _buildFilterButton("Pendentes", Colors.orange), _buildFilterButton("Concluídas", Colors.green)])), const SizedBox(height: 10), Expanded(child: ListView.builder(padding: const EdgeInsets.all(10), itemCount: tarefasFiltradas.length, itemBuilder: (context, index) { final tarefa = tarefasFiltradas[index]; return Card(elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: Colors.grey.shade200)), child: ListTile(leading: IconButton(icon: Icon(tarefa["concluida"] ? Icons.check_circle : Icons.radio_button_unchecked, color: tarefa["concluida"] ? Colors.green : Colors.grey), onPressed: () async { bool novoStatus = !tarefa["concluida"]; Map<String, dynamic> dadosAtualizados = {"titulo": tarefa["titulo"], "concluida": novoStatus, "usuarioId": tarefa["usuarioId"]}; await api.putDados('tarefas', tarefa["id"].toString(), dadosAtualizados); await buscarTarefas(); }), title: Text(tarefa["titulo"]), trailing: Row(mainAxisSize: MainAxisSize.min, children: [IconButton(icon: const Icon(Icons.edit, size: 20, color: Colors.blue), onPressed: () => _showTarefaDialog(tarefa: tarefa)), IconButton(icon: const Icon(Icons.delete, size: 20, color: Colors.redAccent), onPressed: () => excluirTarefa(tarefa))]))); }))]);
+  }
+
+  Widget _buildStatCard(String label, String count, Color bg, Color color) {
+    return Expanded(child: Container(padding: const EdgeInsets.symmetric(vertical: 16), decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12)), child: Column(children: [Text(label, style: TextStyle(color: color, fontWeight: FontWeight.bold)), Text(count, style: TextStyle(color: color, fontSize: 24, fontWeight: FontWeight.bold)), Text("tarefas", style: TextStyle(color: color.withOpacity(0.7), fontSize: 12))])));
+  }
+
+  Widget _buildFilterButton(String label, Color color) {
+    bool isSelected = filtro == label;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => filtro = label),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected ? color : Colors.transparent,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.black87,
+                fontWeight: FontWeight.bold,
               ),
-            ],
+            ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-        onPressed: () => _showTarefaDialog(),
-        child: const Icon(Icons.add),
       ),
     );
   }

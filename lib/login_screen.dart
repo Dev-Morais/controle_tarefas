@@ -84,7 +84,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (resultado["status"] == "sucesso") {
                             var usuario = resultado["usuario"];
                             
-                            // GERENCIAMENTO DE DADOS LOCAIS CORRIGIDO
                             UserData.instance.setDados(
                               usuario['id'].toString(), 
                               usuario['nome'], 
@@ -96,7 +95,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             await prefs.setString('nomeUsuario', usuario['nome']);
                             await prefs.setString('userSenha', usuario['senha'].toString());
                             
-                            bool isAdmin = usuario['id'].toString() == '566YbBnjL0g';
+                            // ID atualizado para o administrador B_eqwSa2lFY
+                            bool isAdmin = usuario['id'].toString() == 'B_eqwSa2lFY';
                             await prefs.setBool('isAdmin', isAdmin);
 
                             AppAlertas.mostrar(context, "Bem-vindo!", isErro: false);

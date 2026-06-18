@@ -63,7 +63,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   child: Row(
                     children: [
                       _cardInfo("Usuários", "${usuarios.length}", Colors.blue),
-                      _cardInfo("Tarefas Totais", "${todasTarefas.length}", Colors.green),
+                      _cardInfo(
+                        "Tarefas Totais", 
+                        "${todasTarefas.where((t) => usuarios.any((u) => u['id'].toString() == t['usuarioId'].toString())).length}", 
+                        Colors.green
+                      ),
                     ],
                   ),
                 ),
@@ -85,7 +89,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     onChanged: (val) {
                       if (val != null && val != "0") {
                         final user = usuarios.firstWhere((u) => u['id'].toString() == val);
-                        // Melhoria aplicada aqui:
                         Navigator.push(
                           context, 
                           MaterialPageRoute(
@@ -94,7 +97,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                               nomeUsuario: user['nome'] ?? 'Usuário'
                             )
                           ),
-                        ).then((_) => _carregarDados()); // <--- Sincroniza ao voltar
+                        ).then((_) => _carregarDados());
                       }
                     },
                   ),

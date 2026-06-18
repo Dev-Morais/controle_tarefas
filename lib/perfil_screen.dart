@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'user_data.dart';
-import 'api_service.dart'; // Certifique-se de importar seu serviço de API
+import 'api_service.dart';
 
 class PerfilScreen extends StatefulWidget {
   const PerfilScreen({super.key});
@@ -12,7 +12,7 @@ class PerfilScreen extends StatefulWidget {
 }
 
 class _PerfilScreenState extends State<PerfilScreen> {
-  final ApiService api = ApiService(); // Instância do serviço
+  final ApiService api = ApiService(); 
   bool isEditing = false;
   
   File? _fotoPerfil;
@@ -37,20 +37,16 @@ class _PerfilScreenState extends State<PerfilScreen> {
     }
   }
 
-  // MÉTODO PARA SALVAR NO BANCO
   Future<void> _salvarPerfil() async {
     try {
       final dadosAtualizados = {
         "nome": _nomeController.text,
         "email": _emailController.text,
-        // Se a nova senha foi preenchida, enviamos ela
         if (_novaSenhaController.text.isNotEmpty) "senha": _novaSenhaController.text,
       };
 
-      // Chama a API (ajuste o 'usuarios' e o ID conforme sua estrutura)
       await api.putDados('usuarios', UserData.instance.id.toString(), dadosAtualizados);
 
-      // Atualiza também o cache local
       UserData.instance.nome = _nomeController.text;
       UserData.instance.email = _emailController.text;
 
@@ -85,22 +81,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: const Text("Meu Perfil"),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: Icon(isEditing ? Icons.save : Icons.edit),
-            onPressed: () {
-              if (isEditing) {
-                _salvarPerfil(); // Salva ao clicar no disquete
-              }
-              setState(() => isEditing = !isEditing);
-            },
-          )
-        ],
-      ),
+      // APPBAR REMOVIDO DAQUI PARA NÃO DUPLICAR
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -157,6 +138,15 @@ class _PerfilScreenState extends State<PerfilScreen> {
                   const Divider(),
                   _infoField(Icons.lock_outline, "Senha Atual", _senhaAtualController, true),
                   _infoField(Icons.lock, "Nova Senha", _novaSenhaController, true),
+                  
+                  // Botão de editar/salvar movido para o corpo da tela
+                  ElevatedButton(
+                    onPressed: () {
+                      if (isEditing) _salvarPerfil();
+                      setState(() => isEditing = !isEditing);
+                    },
+                    child: Text(isEditing ? "Salvar Perfil" : "Editar Perfil"),
+                  ),
                 ],
               ),
             ),

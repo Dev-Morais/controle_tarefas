@@ -11,13 +11,8 @@
       "nome": "admin",
       "email": "admin@admin",
       "senha": "123456",
-      "id": "566YbBnjL0g"
-    },
-    {
-      "nome": "maria raimunda",
-      "email": "maria.r@hotmail.com",
-      "senha": "123456",
-      "id": "ELp36DIWCsk"
+      "id": "B_eqwSa2lFY",
+      "bloqueado": false
     }
   ],
   "tarefas": [
@@ -38,34 +33,34 @@
       "id": "4sHLbbNSBRw"
     },
     {
-      "titulo": "teste",
+      "titulo": "testedd",
       "concluida": true,
       "usuarioId": "D6sMaqqsxlA",
       "id": "-1-yfYODpe0"
     },
     {
-      "titulo": "teste22",
-      "concluida": false,
-      "usuarioId": "D6sMaqqsxlA",
-      "id": "vJX46r0bCX4"
-    },
-    {
       "titulo": "teste",
-      "concluida": false,
-      "usuarioId": "566YbBnjL0g",
-      "id": "LsiJvzJYKDE"
+      "concluida": true,
+      "usuarioId": null,
+      "id": "tuscJWDSRTc"
     },
     {
-      "titulo": "testerj",
-      "concluida": false,
-      "usuarioId": "D6sMaqqsxlA",
-      "id": "4t1QNpv1rvM"
+      "titulo": "Estudar flutter",
+      "concluida": true,
+      "usuarioId": "B_eqwSa2lFY",
+      "id": "4add_UD8htw"
     },
     {
-      "titulo": "rrrr",
+      "titulo": "Estudar HTML e CSS",
       "concluida": false,
-      "usuarioId": "ELp36DIWCsk",
-      "id": "oRtiggqLIS0"
+      "usuarioId": "B_eqwSa2lFY",
+      "id": "-UvhBdS1Zlw"
+    },
+    {
+      "titulo": "Estudar JS",
+      "concluida": false,
+      "usuarioId": "B_eqwSa2lFY",
+      "id": "UyIoHd9Xq_c"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

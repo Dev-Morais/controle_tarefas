@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'api_service.dart';
 import 'main.dart'; 
-import 'user_data.dart'; // Certifique-se de importar o arquivo onde está a classe UserData
+import 'user_data.dart';
+import 'home_screen.dart';
 
 class CadastroScreen extends StatefulWidget {
   const CadastroScreen({super.key});
@@ -18,7 +20,6 @@ class _CadastroScreenState extends State<CadastroScreen> {
   final emailController = TextEditingController();
   final senhaController = TextEditingController();
   
-  // 1. Variável de estado para visibilidade
   bool _senhaVisivel = false;
 
   Future<void> realizarCadastro() async {
@@ -34,21 +35,33 @@ class _CadastroScreenState extends State<CadastroScreen> {
         Navigator.pop(context); 
         AppAlertas.mostrar(context, "E-mail já cadastrado!", isErro: true);
       } else {
-        await api.postDados('usuarios', {
+        // Envia para API e recebe o objeto (Map) de volta
+        var resposta = await api.postDados('usuarios', {
           "nome": nomeController.text,
           "email": emailController.text,
           "senha": senhaController.text,
         });
         
-        // MODIFICAÇÃO SOLICITADA: Salvar dados localmente
+        // Salvar dados localmente
         UserData.instance.nome = nomeController.text;
         UserData.instance.email = emailController.text;
+
+        // Salvar no SharedPreferences usando o ID retornado pela API
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('usuarioId', resposta['id'].toString());
+        await prefs.setString('nomeUsuario', nomeController.text);
         
         if (!mounted) return;
-        Navigator.pop(context); 
+        Navigator.pop(context); // Remove o loading
         
         AppAlertas.mostrar(context, "Cadastro realizado com sucesso!", isErro: false);
-        Navigator.pop(context); 
+        
+        // REDIRECIONAMENTO PARA A HOMESCREEN
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          (route) => false, 
+        );
       }
     } catch (e) {
       Navigator.pop(context); 
@@ -56,7 +69,6 @@ class _CadastroScreenState extends State<CadastroScreen> {
     }
   }
 
-  // Decoração padrão (sem o ícone suffix)
   InputDecoration _buildInputDecoration(String label, IconData icon) {
     return InputDecoration(
       labelText: label,
@@ -110,7 +122,6 @@ class _CadastroScreenState extends State<CadastroScreen> {
                     ),
                     const SizedBox(height: 15),
 
-                    // CAMPO SENHA COM O "OLHO"
                     TextFormField(
                       controller: senhaController,
                       obscureText: !_senhaVisivel,
