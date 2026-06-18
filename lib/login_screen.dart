@@ -95,7 +95,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             await prefs.setString('nomeUsuario', usuario['nome']);
                             await prefs.setString('userSenha', usuario['senha'].toString());
                             
-                            // ID atualizado para o administrador B_eqwSa2lFY
                             bool isAdmin = usuario['id'].toString() == 'B_eqwSa2lFY';
                             await prefs.setBool('isAdmin', isAdmin);
 
@@ -133,6 +132,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text("Criar Conta", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ),
+
+                  // Spacer empurra o rodapé para o final da tela disponível
+                  const SizedBox(height: 80), 
+                  const Text(
+                    'Controle de Tarefas v1.0 | © 2026 | 👨‍💻 Dev Morais',
+                    style: TextStyle(
+                      fontSize: 12, 
+                      color: Colors.grey,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),

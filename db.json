@@ -13,6 +13,18 @@
       "senha": "123456",
       "id": "B_eqwSa2lFY",
       "bloqueado": false
+    },
+    {
+      "nome": "maria",
+      "email": "maria.r@gmail.com",
+      "senha": "123456",
+      "id": "B5nJXN6By3I"
+    },
+    {
+      "nome": "davi",
+      "email": "Davi22@gmail.com",
+      "senha": "123456",
+      "id": "QeEHjG91VqQ"
     }
   ],
   "tarefas": [
@@ -61,6 +73,18 @@
       "concluida": false,
       "usuarioId": "B_eqwSa2lFY",
       "id": "UyIoHd9Xq_c"
+    },
+    {
+      "titulo": "teste",
+      "concluida": true,
+      "usuarioId": "B5nJXN6By3I",
+      "id": "eohsgTj6P-E"
+    },
+    {
+      "titulo": "teste 2",
+      "concluida": false,
+      "usuarioId": "B5nJXN6By3I",
+      "id": "fX9tfJ88Faw"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
