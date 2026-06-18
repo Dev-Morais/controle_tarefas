@@ -6,7 +6,6 @@ Projeto desenvolvido em Flutter para a disciplina de [Desenvolvimento para Dispo
 - **Framework:** Flutter (v3.44.0)
 - **Gerenciamento de Estado:** setState
 - **Persistência:** API REST (JSON Server)
-- **Gráficos:** fl_chart
 
 ## 📋 Funcionalidades
 - ✅ Login e Cadastro de Usuário
@@ -20,3 +19,6 @@ Projeto desenvolvido em Flutter para a disciplina de [Desenvolvimento para Dispo
 3. Instale o JSON Server: `npm install -g json-server`
 4. Inicie a API: `json-server --watch db.json`
 5. Execute o Flutter: `flutter run`
+
+
+Desenvolvedor: 👨‍💻Dev Morais
