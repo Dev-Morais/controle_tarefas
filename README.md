@@ -4,7 +4,7 @@ Projeto desenvolvido em Flutter para a disciplina de Desenvolvimento para Dispos
 ## 🛠 Tecnologias Utilizadas
 - **Framework:** Flutter (v3.44.0)
 - **Linguagem:** Dart
-- **Banco de dados:** SQLite (Via pacote sqlite)
+- **Banco de dados:** SQLite (V1.0 (Via pacote sqlite)
 - **Gerenciamento de Estado:** setState SharedPreferences (para sessão)
 
 
