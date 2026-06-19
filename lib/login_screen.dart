@@ -95,7 +95,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             await prefs.setString('nomeUsuario', usuario['nome']);
                             await prefs.setString('userSenha', usuario['senha'].toString());
                             
-                            bool isAdmin = usuario['id'].toString() == 'B_eqwSa2lFY';
+                            // Lógica corrigida para validar admin pelo e-mail
+                            bool isAdmin = usuario['email'] == 'admin@admin';
                             await prefs.setBool('isAdmin', isAdmin);
 
                             AppAlertas.mostrar(context, "Bem-vindo!", isErro: false);
@@ -133,7 +134,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
 
-                  // Spacer empurra o rodapé para o final da tela disponível
                   const SizedBox(height: 80), 
                   const Text(
                     'Controle de Tarefas v1.0 | © 2026 | 👨‍💻 Dev Morais',

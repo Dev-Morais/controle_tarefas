@@ -37,12 +37,33 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     }
   }
 
+  bool _obterStatusBloqueio(dynamic valor) {
+    if (valor is bool) return valor;
+    if (valor is String) return valor.toLowerCase() == 'true';
+    return false;
+  }
+
   Future<void> _bloquearUsuario(dynamic user) async {
-    bool novoStatus = !(user['bloqueado'] ?? false);
-    await api.putDados('usuarios', user['id'].toString(), {
-      ...user,
-      'bloqueado': novoStatus,
+    bool statusAtual = _obterStatusBloqueio(user['bloqueado']);
+    bool novoStatus = !statusAtual;
+
+    // Otimização: atualiza o estado localmente para o switch reagir rápido
+    setState(() {
+      user['bloqueado'] = novoStatus;
     });
+
+    try {
+      // Envia apenas o campo alterado para evitar conflitos de estrutura no servidor
+      await api.putDados('usuarios', user['id'].toString(), {
+        'bloqueado': novoStatus,
+      });
+    } catch (e) {
+      debugPrint("Erro ao atualizar status: $e");
+      // Reverte em caso de erro
+      setState(() {
+        user['bloqueado'] = statusAtual;
+      });
+    }
     _carregarDados();
   }
 
@@ -112,16 +133,18 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     itemCount: usuarios.length,
                     itemBuilder: (context, index) {
                       final user = usuarios[index];
+                      bool estaBloqueado = _obterStatusBloqueio(user['bloqueado']);
+                      
                       return Card(
                         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         child: ListTile(
                           leading: const CircleAvatar(child: Icon(Icons.person)),
                           title: Text(user['nome'] ?? 'Sem nome'),
-                          subtitle: SwitchListTile(
-                            contentPadding: EdgeInsets.zero,
-                            title: Text(user['bloqueado'] == true ? "Bloqueado" : "Ativo"),
-                            value: user['bloqueado'] ?? false,
-                            onChanged: (_) => _bloquearUsuario(user),
+                          subtitle: Switch(
+                            value: estaBloqueado,
+                            onChanged: (bool value) {
+                              _bloquearUsuario(user);
+                            },
                           ),
                           trailing: IconButton(
                             icon: const Icon(Icons.delete_forever, color: Colors.red),

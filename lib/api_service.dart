@@ -1,76 +1,48 @@
-import 'dart:convert';
-import 'package:flutter/material.dart'; 
-import 'package:http/http.dart' as http;
+import 'db_helper.dart';
 
 class ApiService {
-  // A URL deve ser apenas uma string limpa:
-  final String baseUrl = "http://192.168.0.185:3000";
-
-  Future<List> getDados(String endpoint, {String? usuarioId}) async {
-    String url = '$baseUrl/$endpoint';
+  
+  Future<List<Map<String, dynamic>>> getDados(String endpoint, {String? usuarioId}) async {
+    final data = await DBHelper.query(endpoint);
     if (usuarioId != null) {
-      url += '?usuarioId=$usuarioId';
+      // Garantir conversão segura para String antes de comparar
+      return data.where((item) => item['usuarioId']?.toString() == usuarioId).toList();
     }
-    
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Falha ao carregar dados');
-    }
+    return data;
   }
 
-  // Método atualizado para retornar o Map contendo o ID
   Future<Map<String, dynamic>> postDados(String endpoint, Map<String, dynamic> dados) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/$endpoint'),
-      headers: {"Content-Type": "application/json"},
-      body: json.encode(dados),
-    );
-
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      // Retorna o objeto criado (que contém o ID)
-      return json.decode(response.body); 
-    } else {
-      throw Exception('Falha ao salvar dados');
-    }
+    // O SQLite retorna o ID da linha inserida.
+    int id = await DBHelper.insert(endpoint, dados);
+    dados['id'] = id; 
+    return dados;
   }
 
   Future<void> putDados(String endpoint, dynamic id, Map<String, dynamic> dados) async {
-    final url = Uri.parse('$baseUrl/$endpoint/$id');
-    final response = await http.put(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: json.encode(dados),
-    );
-    debugPrint('PUT status: ${response.statusCode} | URL: $url');
+    // Garantir que o ID seja tratado como inteiro
+    await DBHelper.update(endpoint, int.tryParse(id.toString()) ?? 0, dados);
   }
 
   Future<void> deleteDados(String endpoint, dynamic id) async {
-    final url = Uri.parse('$baseUrl/$endpoint/$id');
-    final response = await http.delete(url);
-    debugPrint('DELETE status: ${response.statusCode} | URL: $url');
+    await DBHelper.delete(endpoint, int.tryParse(id.toString()) ?? 0);
   }
 
   Future<bool> emailJaExiste(String email) async {
-    final response = await http.get(Uri.parse('$baseUrl/usuarios'));
-    List usuarios = json.decode(response.body);
-    return usuarios.any((user) => user['email'] == email);
+    final usuarios = await DBHelper.query('usuarios');
+    return usuarios.any((user) => user['email']?.toString().trim() == email.trim());
   }
 
   Future<Map<String, dynamic>> validarLogin(String email, String senha) async {
-    final response = await http.get(Uri.parse('$baseUrl/usuarios'));
-    if (response.statusCode != 200) return {"status": "erro_conexao"};
-
-    List usuarios = json.decode(response.body);
+    final usuarios = await DBHelper.query('usuarios');
     
     try {
       var user = usuarios.firstWhere(
-        (u) => u['email'].toString().trim() == email.trim() && 
-        u['senha'].toString().trim() == senha.trim(),
+        (u) => u['email']?.toString().trim() == email.trim() && 
+               u['senha']?.toString().trim() == senha.trim(),
       );
 
-      bool estaBloqueado = user['bloqueado'].toString().toLowerCase() == 'true';
+      // Verificação de bloqueio
+      bool estaBloqueado = user['bloqueado']?.toString().toLowerCase() == 'true';
       
       if (estaBloqueado && user['email'] != 'admin@admin') {
         return {"status": "bloqueado"}; 

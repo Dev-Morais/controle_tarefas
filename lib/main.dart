@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'db_helper.dart'; // Certifique-se de importar o seu helper
 import 'login_screen.dart';
 import 'splash_screen.dart';
 import 'home_screen.dart';
 import 'perfil_screen.dart';
 import 'alterar_senha_screen.dart';
 
-void main() {
+void main() async { // 1. Adicionado async
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // 2. Garante que o usuário admin exista antes do app iniciar
+  await DBHelper.seedDatabase(); 
+  
   runApp(const MyApp());
 }
 
@@ -26,7 +31,6 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.grey[100],
       ),
-      // Navegação por rotas nomeadas
       initialRoute: '/', 
       routes: {
         '/': (context) => const SplashScreen(),
@@ -39,7 +43,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Classe de Utilitários para Alertas Padronizados
+// Sua classe de alertas permanece igual
 class AppAlertas {
   static void mostrar(BuildContext context, String mensagem, {bool isErro = true}) {
     final messenger = ScaffoldMessenger.of(context);

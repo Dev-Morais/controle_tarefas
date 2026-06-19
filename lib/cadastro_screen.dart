@@ -35,18 +35,19 @@ class _CadastroScreenState extends State<CadastroScreen> {
         Navigator.pop(context); 
         AppAlertas.mostrar(context, "E-mail já cadastrado!", isErro: true);
       } else {
-        // Envia para API e recebe o objeto (Map) de volta
+        // CORREÇÃO: Adicionado o campo 'bloqueado' que falta na estrutura da tabela
         var resposta = await api.postDados('usuarios', {
           "nome": nomeController.text,
           "email": emailController.text,
           "senha": senhaController.text,
+          "bloqueado": "false", 
         });
         
         // Salvar dados localmente
         UserData.instance.nome = nomeController.text;
         UserData.instance.email = emailController.text;
 
-        // Salvar no SharedPreferences usando o ID retornado pela API
+        // Salvar no SharedPreferences usando o ID retornado
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('usuarioId', resposta['id'].toString());
         await prefs.setString('nomeUsuario', nomeController.text);
