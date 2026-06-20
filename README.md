@@ -2,7 +2,7 @@
 Projeto desenvolvido em Flutter para a disciplina de Desenvolvimento para Dispositivos Móveis. Um app completo de gerenciamento de tarefas com autenticação e persistência de dados local de alta performance.
 
 ## 🛠 Tecnologias Utilizadas
-- **Framework:** Flutter (v3.44.0)
+- **Framework:** Flutter (v3.44.2)
 - **Linguagem:** Dart
 - **Banco de dados:** SQLite (V1.0 (Via pacote sqlite)
 - **Gerenciamento de Estado:** setState SharedPreferences (para sessão)
